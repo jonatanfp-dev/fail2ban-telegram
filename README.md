@@ -1,26 +1,26 @@
-# Crear un Bot de Telegram e Integrarlo con Fail2ban para Alertas
+# Create a Telegram Bot and Integrate It with Fail2ban for Alerts
 
-- **[English Documentation](README.md.en)**: Click here to access the English version of the documentation.
+- **[Documentación en Español](README.md.es)**: Haga clic aquí para acceder a la versión en español de la documentación.
 
-## 1. Crear un Bot de Telegram
+## 1. Create a Telegram Bot
 
-1. Abre la aplicación de Telegram y busca el usuario `@BotFather`.
-2. Inicia una conversación con `@BotFather` escribiendo `/start`.
-3. Escribe `/newbot` para comenzar el proceso de creación de un nuevo bot.
-4. Sigue las instrucciones que se te presenten:
-   - Elige un **nombre** para tu bot.
-   - Selecciona un **nombre de usuario** que termine en `bot` (por ejemplo, `MiSuperBot` y `MiSuperBot_bot`).
-5. Después de crear tu bot, `@BotFather` te proporcionará un **Token**.
-6. Este Token es un código único que necesitarás para interactuar con tu bot desde tu código. **Guarda el Token en un lugar seguro**.
-7. Envía un mensaje al bot (por ejemplo, "Hola") para que se registre el chat.
-8. Abre un navegador e ingresa la siguiente URL, reemplazando `TOKEN` con el token de tu bot:
+1. Open the Telegram app and search for the user `@BotFather`.
+2. Start a conversation with `@BotFather` by typing `/start`.
+3. Type `/newbot` to begin the process of creating a new bot.
+4. Follow the instructions provided:
+   - Choose a **name** for your bot.
+   - Select a **username** that ends in `bot` (for example, `MySuperBot` and `MySuperBot_bot`).
+5. After creating your bot, `@BotFather` will provide you with a **Token**.
+6. This Token is a unique code that you will need to interact with your bot from your code. **Keep the Token in a safe place**.
+7. Send a message to the bot (e.g., "Hello") to register the chat.
+8. Open a browser and enter the following URL, replacing `TOKEN` with your bot’s token:
 
    `https://api.telegram.org/botTOKEN/getUpdates`
 
-9. Presiona Enter. Deberías recibir una respuesta en formato JSON. Si obtienes un JSON vacío, asegúrate de haber enviado un mensaje al bot previamente.
-10. Busca en el JSON la clave `chat`, y dentro de ella, `id`. Ese es tu `Chat ID`.
+9. Press Enter. You should receive a response in JSON format. If you get an empty JSON, make sure you have sent a message to the bot beforehand.
+10. Look in the JSON for the `chat` key, and within it, `id`. That is your `Chat ID`.
 
-    **Ejemplo de Respuesta en JSON:**
+    **Example JSON Response:**
 
     ```json
     {
@@ -33,114 +33,114 @@
             "from": {
               "id": 987654321,
               "is_bot": false,
-              "first_name": "TuNombre",
-              "username": "TuUsuario"
+              "first_name": "YourName",
+              "username": "YourUsername"
             },
             "chat": {
               "id": 123456789,
-              "first_name": "TuNombre",
-              "username": "TuUsuario"
+              "first_name": "YourName",
+              "username": "YourUsername"
             },
             "date": 1615156262,
-            "text": "Hola"
+            "text": "Hello"
           }
         }
       ]
     }
     ```
 
-## 2. Configurar Fail2ban para Integración con Telegram
+## 2. Configure Fail2ban for Integration with Telegram
 
-1. Si no tienes instalado Fail2ban en tu sistema, instálalo usando el siguiente comando (para Ubuntu Server):
+1. If Fail2ban is not installed on your system, install it using the following command (for Ubuntu Server):
 
    ```bash
    sudo apt-get install fail2ban
    ```
 
-2. Configura el archivo `jail.local` (o `jail.conf` si prefieres). Puedes seguir diferentes tutoriales en línea, pero aquí te muestro un ejemplo básico de configuración:
+2. Configure the `jail.local` file (or `jail.conf` if you prefer). You can follow various online tutorials, but here is a basic example of the configuration:
 
    ```bash
    sudo nano /etc/fail2ban/jail.local
    ```
 
-   **Ejemplo de Configuración:**
+   **Configuration Example:**
 
    ```ini
-    [DEFAULT]
-    ignoreip = 127.0.0.1 ::1
-    backend = auto
-    banaction = iptables-multiport
-    action = telegram
+   [DEFAULT]
+   ignoreip = 127.0.0.1 ::1
+   backend = auto
+   banaction = iptables-multiport
+   action = telegram
 
-    [sshd]
-    enabled = true
-    filter = sshd
-    port = 22
-    logpath = /var/log/auth.log
-    maxretry = 3
-    findtime = 600
-    bantime = 1200
+   [sshd]
+   enabled = true
+   filter = sshd
+   port = 22
+   logpath = /var/log/auth.log
+   maxretry = 3
+   findtime = 600
+   bantime = 1200
    ```
 
-   Nota: Asegúrate de que `action = telegram` esté correctamente configurado en tu archivo. Lo demás depende de cómo desees ajustar tus reglas de Fail2ban.
+   Note: Ensure that `action = telegram` is correctly configured in your file. The rest depends on how you want to adjust your Fail2ban rules.
 
-3. Crea la carpeta necesaria:
+3. Create the necessary folder:
 
    ```bash
    sudo mkdir /etc/fail2ban/scripts/
    ```
 
-4. Navega a la carpeta donde quieras descargar el repositorio (en este ejemplo, `Descargas`):
+4. Navigate to the folder where you want to download the repository (in this example, `Downloads`):
 
    ```bash
-   cd ~/Descargas/
+   cd ~/Downloads/
    ```
 
-5. Descarga el repositorio desde GitHub:
+5. Download the repository from GitHub:
 
    ```bash
    git clone https://github.com/jonatanfp-dev/fail2ban-telegram.git
    ```
 
-6. Navega a la carpeta del repositorio:
+6. Navigate to the repository folder:
 
    ```bash
    cd fail2ban-telegram
    ```
 
-7. Vamos a copiar el archivo `telegram.conf`
+7. Copy the `telegram.conf` file:
 
    ```bash
    sudo cp telegram.conf /etc/fail2ban/action.d/
    ```
 
-8. También copiaremos en script `telegram.sh`
+8. Also, copy the `telegram.sh` script:
 
    ```bash
-   sudo cp telegram.sh.es /etc/fail2ban/scripts/telegram.sh
+   sudo cp telegram.sh.en /etc/fail2ban/scripts/telegram.sh
    ```
 
-   1. Editaremos para pegar nuestro `token` y `chat_id`
+   1. Edit the file to insert your `token` and `chat_id`:
 
       ```bash
       sudo nano /etc/fail2ban/scripts/telegram.sh
       ```
 
-   2. Cambiaremos los valores de `API_TOKEN` y de `CHAT_ID`:
+   2. Change the values of `API_TOKEN` and `CHAT_ID`:
       ```bash
-      # Ejemplo: Aquí debes de pegar tu token y debería quedar algo similar
+      # Example: Paste your token here and it should look something like
       API_TOKEN="342523667645756856896796966757"
-      # Ejemplo: Aquí debes de pegar tu chat_id y debería quedar algo similar
+      # Example: Paste your chat_id here and it should look something like
       CHAT_ID="123456789"
       ```
 
-9. Reinicia Fail2ban para aplicar los cambios:
+9. Restart Fail2ban to apply the changes:
 
    ```bash
    sudo systemctl restart fail2ban
    ```
 
-10. Verifica el estado de Fail2ban para asegurarte de que esté funcionando correctamente:
+10. Check the status of Fail2ban to ensure it is running correctly:
 
     ```bash
     sudo systemctl status fail2ban
