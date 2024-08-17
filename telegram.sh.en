@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# Telegram configuration
+# Example:
+# API_TOKEN="342523667645756856896796966757"
+# CHAT_ID="123456789"
+API_TOKEN="your token here between the quotes"
+CHAT_ID="and here similarly with the chat_id"
+
+# Log file
+LOG_FILE="/var/log/fail2ban_script.log"
+
+# Function to log messages
+log_message() {
+  echo "$(date +'%Y-%m-%d %H:%M:%S') - $1" >>"$LOG_FILE"
+}
+
+# Function to send a message to Telegram
+send_message() {
+  local message="$1"
+  local url="https://api.telegram.org/bot$API_TOKEN/sendMessage"
+  local response
+
+  response=$(curl -s -X POST -d chat_id="$CHAT_ID" -d text="$message" -d parse_mode="HTML" "$url")
+  if [[ $? -eq 0 ]]; then
+    log_message "Message sent successfully: $message"
+  else
+    log_message "Error sending message: $response"
+  fi
+}
+
+# Check the arguments
+if [[ $# -lt 1 ]]; then
+  log_message "Incorrect script usage. At least one action is required."
+  exit 1
+fi
+
+# Get the action
+ACTION="$1"
+shift
+
+# Get additional parameters based on the action
+case "$ACTION" in
+start | stop)
+  IP=""
+  NAME="$1"
+  ;;
+ban | unban)
+  IP="$1"
+  NAME="$2"
+  ;;
+*)
+  log_message "Unknown action: $ACTION"
+  exit 1
+  ;;
+esac
+
+# Log received parameters
+log_message "Received parameters - Action: $ACTION, IP: ${IP:-<no IP>}, Name: ${NAME:-<no name>}"
+
+# Build the message based on the action
+case "$ACTION" in
+start)
+  MESSAGE="🚀 The jail <b><i>$NAME</i></b> is now active."
+  ;;
+stop)
+  MESSAGE="🛑 The jail <b><i>$NAME</i></b> has been stopped."
+  ;;
+ban)
+  if [[ -n "$IP" ]]; then
+    MESSAGE="🔒 The IP <b><i>$IP</i></b> has been blocked from <b><i>$NAME</i></b> by Fail2ban."
+  else
+    MESSAGE="🔒 An IP has been blocked from <b><i>$NAME</i></b> by Fail2ban."
+  fi
+  ;;
+unban)
+  if [[ -n "$IP" ]]; then
+    MESSAGE="🌐 The IP <b><i>$IP</i></b> has been unblocked from the jail <b><i>$NAME</i></b> by Fail2ban."
+  else
+    MESSAGE="🌐 An IP has been unblocked from the jail <b><i>$NAME</i></b> by Fail2ban."
+  fi
+  ;;
+esac
+
+# Send the message
+send_message "$MESSAGE"
