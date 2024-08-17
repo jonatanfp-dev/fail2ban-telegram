@@ -4,6 +4,8 @@
 
 ![Preview](assets/preview.png)
 
+## 🌍 Languages
+
 - **[English Documentation](README.en.md)**: Click here to access the English version of the documentation.
 
 - **[Documentación en Español](README.es.md)**: Haga clic aquí para acceder a la versión en español de la documentación.
