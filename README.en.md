@@ -64,20 +64,19 @@
    **Configuration Example:**
 
    ```ini
-   [DEFAULT]
-   ignoreip = 127.0.0.1 ::1
-   backend = auto
-   banaction = iptables-multiport
-   action = telegram
+      [DEFAULT]
+      ignoreip = 127.0.0.1 ::1 192.168.23.0/24
+      backend = auto
 
-   [sshd]
-   enabled = true
-   filter = sshd
-   port = 22
-   logpath = /var/log/auth.log
-   maxretry = 3
-   findtime = 600
-   bantime = 1200
+      [sshd]
+      enabled = true
+      filter = sshd
+      port = 2301
+      logpath = /var/log/auth.log
+      maxretry = 3
+      findtime = 600
+      bantime = 1200
+      action = iptables-multiport[name=sshd, port="2301", protocol=tcp] telegram
    ```
 
    Note: Ensure that `action = telegram` is correctly configured in your file. The rest depends on how you want to adjust your Fail2ban rules.
