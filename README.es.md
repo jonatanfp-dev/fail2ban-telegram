@@ -1,7 +1,5 @@
 # Crear un Bot de Telegram e Integrarlo con Fail2ban para Alertas
 
-- **[Documentación en Español](README.md.es)**: Haga clic aquí para acceder a la versión en español de la documentación.
-
 ## 1. Crear un Bot de Telegram
 
 1. Abre la aplicación de Telegram y busca el usuario `@BotFather`.
@@ -145,11 +143,3 @@
     ```bash
     sudo systemctl status fail2ban
     ```
-
----
-
-## 📫 Contacto | Contact
-
-- **Email:** [info@jonatanfp.net](mailto:info@jonatanfp.net)
-- **Instagram:** [@jonatanfp\_](https://instagram.com/jonatanfp_)
-- **X Corp:** [@jonatanfp\_](https://twitter.com/jonatanfp_)
