@@ -71,12 +71,12 @@
       [sshd]
       enabled = true
       filter = sshd
-      port = 2301
+      port = 22
       logpath = /var/log/auth.log
       maxretry = 3
       findtime = 600
       bantime = 1200
-      action = iptables-multiport[name=sshd, port="2301", protocol=tcp] telegram
+      action = iptables-multiport[name=sshd, port="22", protocol=tcp] telegram
    ```
 
    Note: Ensure that `action = telegram` is correctly configured in your file. The rest depends on how you want to adjust your Fail2ban rules.
